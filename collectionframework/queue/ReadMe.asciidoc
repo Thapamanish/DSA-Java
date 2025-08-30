@@ -1,0 +1,40 @@
+== Queue, Deque, and PriorityQueue
+
+=== Queue Interface
+
+A `Queue` is a collection designed for FIFO (First-In-First-Out).
+
+* Think of a line at a ticket counter.
+
+Core methods:
+
+* `add(e)` / `offer(e)` → insert
+* `remove()` / `poll()` → remove front
+* `element()` / `peek()` → look at front without removing
+
+=== Deque (Double-Ended Queue)
+
+A `Deque` lets you insert/remove from both ends.
+
+* Implemented by `ArrayDeque` (preferred) or `LinkedList`.
+* Can act as:
+** Queue (FIFO)
+** Stack (LIFO)
+
+=== PriorityQueue (Min-Heap)
+
+A `PriorityQueue` orders elements by priority (natural order by default).
+
+* In Java, default = min-heap (smallest element has highest priority).
+
+Operations:
+
+* `add()` → O(log n)
+* `poll()` (remove smallest) → O(log n)
+* `peek()` (see smallest) → O(1)
+
+=== When to Use
+
+* `Queue` (`LinkedList`/`ArrayDeque`) → BFS, scheduling, buffering.
+* `Deque` (`ArrayDeque`) → sliding window problems, stack + queue hybrids.
+* `PriorityQueue` → heaps, Dijkstra’s algorithm, top-K problems, median finding.

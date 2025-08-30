@@ -1,0 +1,114 @@
+= HashMap Utilities – Quick Reference
+:toc: macro
+:toclevels: 2
+:source-highlighter: highlightjs
+
+[.lead]
+Cheatsheet of commonly used `HashMap` operations with notes on behavior and complexity.
+
+toc::[]
+
+== Creation
+* `Map<K, V> map = new HashMap<>();`
+* `Map<K, V> map = new HashMap<>(initialCapacity);`
+* `Map<K, V> map = new HashMap<>(initialCapacity, loadFactor);`
+* `Map<K, V> copy = new HashMap<>(otherMap);`
+
+== Adding & Updating
+* `put(key, value)` – insert or update mapping.
+* `putIfAbsent(key, value)` – only insert if key not present.
+* `putAll(map)` – copy all entries.
+
+== Accessing Values
+* `get(key)` – returns value or `null` if not found.
+* `getOrDefault(key, defaultValue)` – safe retrieval with fallback.
+* `containsKey(key)` – true if key present.
+* `containsValue(value)` – true if any entry has given value.
+
+== Removing
+* `remove(key)` – remove entry for key.
+* `remove(key, value)` – remove only if key maps to value.
+* `clear()` – remove all mappings.
+
+== Iteration
+* Iterate over keys:
++
+[source,java]
+----
+for (K key : map.keySet()) {
+    System.out.println(key);
+}
+----
+* Iterate over values:
++
+[source,java]
+----
+for (V value : map.values()) {
+    System.out.println(value);
+}
+----
+* Iterate over entries (keys + values):
++
+[source,java]
+----
+for (Map.Entry<K,V> e : map.entrySet()) {
+    System.out.println(e.getKey() + " -> " + e.getValue());
+}
+----
+
+== Bulk & Defaults
+* `isEmpty()` – check if empty.
+* `size()` – number of entries.
+* `merge(key, value, remappingFn)` – combine old + new value.
+* `compute(key, fn)` – recompute value for key.
+* `computeIfAbsent(key, fn)` – compute only if absent.
+* `computeIfPresent(key, fn)` – compute only if present.
+* `replace(key, value)` – replace value for key if present.
+* `replace(key, oldValue, newValue)` – replace only if current value matches.
+* `replaceAll(fn)` – apply function to all values.
+
+== Equality & Hashing
+* `equals(otherMap)` – true if same key-value pairs.
+* `hashCode()` – consistent with equals.
+
+== Complexity Snapshot
+[cols="30,35,35", options="header"]
+|===
+| Operation | Average Case | Worst Case
+| put/get/remove | O(1) | O(n) (rare, many collisions)
+| containsKey | O(1) | O(n)
+| containsValue | O(n) | O(n)
+| iteration (all entries) | O(n) | O(n)
+|===
+
+== Gotchas
+* **Nulls**: `HashMap` allows one `null` key and multiple `null` values.
+* **Order**: `HashMap` does not guarantee ordering.  
+  - Use `LinkedHashMap` for insertion order.  
+  - Use `TreeMap` for sorted order (O(log n) ops).
+* **HashCode/Equals**: Custom key objects must override `hashCode()` and `equals()` properly.
+* Not thread-safe – use `ConcurrentHashMap` in multithreaded contexts.
+
+== Common Patterns
+* **Frequency counter**:
++
+[source,java]
+----
+Map<Integer, Integer> freq = new HashMap<>();
+for (int num : arr) {
+    freq.put(num, freq.getOrDefault(num, 0) + 1);
+}
+----
+* **Two Sum (LeetCode-style)**:
++
+[source,java]
+----
+Map<Integer,Integer> map = new HashMap<>();
+for (int i=0; i<arr.length; i++) {
+    int complement = target - arr[i];
+    if (map.containsKey(complement)) {
+        return new int[]{map.get(complement), i};
+    }
+    map.put(arr[i], i);
+}
+----

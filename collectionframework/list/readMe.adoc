@@ -1,0 +1,95 @@
+= ArrayList Utilities – Quick Reference
+:toc: macro
+:toclevels: 2
+:source-highlighter: highlightjs
+
+[.lead]
+Cheatsheet of commonly used `ArrayList` operations with notes on behavior and complexity.
+
+toc::[]
+
+== Creation
+* `new ArrayList<>()` – empty list.
+* `new ArrayList<>(initialCapacity)` – pre-size backing array.
+* `new ArrayList<>(collection)` – copy from another collection.
+
+== Adding Elements
+* `add(e)` – append at end (amortized O(1)).
+* `add(index, e)` – insert at index (O(n), shifts right).
+* `addAll(coll)` – add all from another collection.
+* `addAll(index, coll)` – insert collection at position.
+
+== Access / Update
+* `get(index)` – random access in O(1).
+* `set(index, e)` – update element in O(1).
+
+== Removing Elements
+* `remove(index)` – remove by index (O(n), shifts left).
+* `remove(Object o)` – removes first occurrence by value.
+* `removeAll(coll)` – removes all elements present in given collection.
+* `retainAll(coll)` – keeps only elements also present in given collection.
+* `clear()` – remove all elements.
+
+== Searching
+* `contains(e)` – O(n).
+* `indexOf(e)` – first index, or -1 if not found.
+* `lastIndexOf(e)` – last index, or -1 if not found.
+* `containsAll(coll)` – true if all given elements exist.
+
+== Size & Capacity
+* `size()` – current number of elements.
+* `isEmpty()` – true if size == 0.
+* `ensureCapacity(n)` – grow internal array capacity.
+* `trimToSize()` – shrink capacity to fit current size.
+
+== Conversion
+* `toArray()` → `Object[]`.
+* `toArray(T[])` → typed array, e.g. `toArray(new Integer[0])`.
+
+== Iteration
+* Standard for loop: `for (int i=0; i<list.size(); i++)`.
+* Enhanced for-each: `for (T x : list)`.
+* Iterator: 
++
+[source,java]
+----
+Iterator<Integer> it = list.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next());
+}
+----
+
+== Sorting & Shuffling
+* `Collections.sort(list)` – ascending (natural order).
+* `Collections.sort(list, Collections.reverseOrder())` – descending.
+* `Collections.shuffle(list)` – random order.
+
+== Sublist (Backed View)
+* `subList(from, to)` returns a **view** over the range `[from, to)`.
+* Mutations to sublist reflect in parent list.
+* Avoid structural modification of parent while view exists.
+
+== Equality & Hashing
+* `equals()` compares element-by-element **and order**.
+* `hashCode()` consistent with `equals()`.
+
+== Complexity Snapshot
+[cols="30,35,35", options="header"]
+|===
+| Operation | Complexity | Notes
+| Access (get/set) | O(1) | random access fast
+| Add at end | Amortized O(1) | resize occasionally
+| Insert/remove middle | O(n) | shift elements
+| Search by value | O(n) | linear scan
+| Sort | O(n log n) | TimSort in `Collections.sort`
+|===
+
+== Gotchas
+* `remove(int)` vs `remove(Object)` – be explicit to avoid ambiguity.
+* `subList` is *backed* – changes reflect in both views.
+* Prefer declaring as `List<T>` rather than `ArrayList<T>`:
++
+[source,java]
+----
+List<Integer> list = new ArrayList<>();
+----

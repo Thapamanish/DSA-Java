@@ -1,0 +1,16 @@
+= Sorting Algorithms Roadmap
+
+We'll learn them in progressive order:
+
+* *Elementary sorts* (`O(n^2^)`) - easy to understand, good for learning basics:
+** Bubble Sort
+** Selection Sort
+** Insertion Sort
+
+* *Efficient sorts* (`O(n log n)`) - real-world use:
+** Merge Sort (Divide & Conquer, stable)
+** Quick Sort (Divide & Conquer, in-place)
+** Heap Sort (based on PriorityQueue / heaps)
+
+* *Specialized sorts* - later:
+** Counting Sort, Radix Sort, Bucket Sort (for specific cases)

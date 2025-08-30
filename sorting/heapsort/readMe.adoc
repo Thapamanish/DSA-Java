@@ -1,0 +1,21 @@
+= Heap Sort
+
+== Core Idea
+
+. *Build a Max-Heap*: The first step is to rearrange the array into a max-heap data structure, where the largest element is always at the root (index 0).
+. *Swap and Reduce*: Swap the root element (the current maximum) with the last element of the heap. Then, reduce the conceptual size of the heap by one, effectively locking the largest element in its final sorted position at the end of the array.
+. *Re-Heapify*: After the swap, the new root may violate the heap property. Run the `heapify` process on the root of the reduced heap to restore the max-heap structure.
+. *Repeat*: Continue the "swap, reduce, and re-heapify" process until the entire array is sorted.
+
+[NOTE]
+====
+This method builds the final sorted array from back to front, placing the largest elements into their correct positions first.
+====
+
+== Key Notes
+
+* The `heapify()` routine is the core mechanism that maintains the heap property (for a max-heap, a parent node is always greater than or equal to its children).
+* The algorithm consists of two main phases: building the initial heap (which is an `O(n)` operation) and then extracting the max element `n-1` times (an `O(n log n)` operation).
+* *Time Complexity:* `O(n log n)` for all cases (worst, average, and best).
+* *Space Complexity:* `O(1)` (it is an in-place sorting algorithm).
+* *Stability:* Heap Sort is not a stable sort, meaning the relative order of equal elements is not guaranteed to be preserved.

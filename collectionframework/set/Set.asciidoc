@@ -1,0 +1,32 @@
+== Java Set Interface
+
+A `Set` is a collection that:
+
+* Stores unique elements (no duplicates).
+* Does not allow indexing (unlike `List`).
+* Provides fast membership tests (`contains`).
+
+=== HashSet
+
+* Backed by a hash table.
+* Order is not guaranteed.
+* `add`, `remove`, `contains` → O(1) average.
+* Best choice for most DSA problems when you just care about existence and uniqueness.
+
+=== LinkedHashSet
+
+* Backed by a hash table + linked list.
+* Maintains insertion order.
+* Performance slightly slower than `HashSet`, but still O(1) average.
+
+=== TreeSet
+
+* Backed by a Red-Black Tree (balanced BST).
+* Maintains elements in sorted order.
+* `add`, `remove`, `contains` → O(log n).
+
+=== When to Use Which?
+
+* `HashSet` → default choice (fastest for most cases).
+* `LinkedHashSet` → when you care about insertion order.
+* `TreeSet` → when you need a sorted set or need to do range queries (`headSet`, `tailSet`).

@@ -1,0 +1,21 @@
+= Bubble Sort
+The simplest sorting algorithm.
+
+== Idea
+* Repeatedly compare adjacent elements, and swap if they’re in the wrong order.
+* After the 1st pass, the largest element “bubbles” to the end.
+* Repeat until the array is sorted.
+
+== Pseudocode
+[source,pseudocode]
+----
+for i = 0 to n-1:
+    for j = 0 to n-i-2:
+        if arr[j] > arr[j+1]:
+            swap(arr[j], arr[j+1])
+----
+
+== Complexity
+* *Worst Case Time:* `O(n^2^)`
+* *Best Case Time (Optimized):* `O(n)`
+* *Space:* `O(1)` (in-place)
