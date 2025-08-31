@@ -84,6 +84,39 @@ set.stream().filter(x -> x % 2 == 0).forEach(System.out::println);
 * ❌ Operations are O(log n).
 * Does not allow `null`.
 
+==== NavigableSet Operations
+TreeSet implements the `NavigableSet` interface, providing powerful navigation and range-query utilities:
+
+* `first()` – lowest element
+* `last()` – highest element
+* `ceiling(e)` – least element ≥ e, or null if none
+* `floor(e)` – greatest element ≤ e, or null if none
+* `higher(e)` – least element > e, or null if none
+* `lower(e)` – greatest element < e, or null if none
+* `headSet(toElement, inclusive)` – elements < or ≤ toElement
+* `tailSet(fromElement, inclusive)` – elements ≥ or > fromElement
+* `subSet(fromElement, fromInclusive, toElement, toInclusive)` – range view
+* `descendingSet()` – reverse order view
+
+Example:
+
+[source,java]
+----
+TreeSet<Integer> ts = new TreeSet<>(Arrays.asList(10, 20, 30, 40, 50));
+System.out.println(ts.first());           // 10
+System.out.println(ts.last());            // 50
+System.out.println(ts.ceiling(25));       // 30
+System.out.println(ts.floor(25));         // 20
+System.out.println(ts.higher(30));        // 40
+System.out.println(ts.lower(30));         // 20
+System.out.println(ts.headSet(30));       // [10, 20]
+System.out.println(ts.headSet(30, true)); // [10, 20, 30]
+System.out.println(ts.tailSet(30));       // [30, 40, 50]
+System.out.println(ts.tailSet(30, false));// [40, 50]
+System.out.println(ts.subSet(20, true, 40, false)); // [20, 30]
+System.out.println(ts.descendingSet());   // [50, 40, 30, 20, 10]
+----
+
 == Complexity Snapshot
 [cols="30,35,35,35", options="header"]
 |===

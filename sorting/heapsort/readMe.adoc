@@ -1,21 +1,43 @@
-= Heap Sort
+= Heap Sort — Story, Intuition, and Notes
 
-== Core Idea
+== 🪢 Story / Analogy
+Imagine a knockout tournament where the strongest player always rises to the top.
+We first organize players into a *max-heap* (a complete binary tree where each parent ≥ its children).
+The champion (largest value) is at the root.
+Move the champion to the end (final position), then re-organize the remaining players (heapify) to find the next champion.
+Repeat until everyone is placed — that’s Heap Sort.
 
-. *Build a Max-Heap*: The first step is to rearrange the array into a max-heap data structure, where the largest element is always at the root (index 0).
-. *Swap and Reduce*: Swap the root element (the current maximum) with the last element of the heap. Then, reduce the conceptual size of the heap by one, effectively locking the largest element in its final sorted position at the end of the array.
-. *Re-Heapify*: After the swap, the new root may violate the heap property. Run the `heapify` process on the root of the reduced heap to restore the max-heap structure.
-. *Repeat*: Continue the "swap, reduce, and re-heapify" process until the entire array is sorted.
+== 🔍 Algorithm (Ascending)
+. **Build a Max-Heap** from the array (in-place):
+.. Start from the last non-leaf node (`n/2 - 1`) down to `0`, and `heapify` each node.
+. **Extract max repeatedly**:
+.. Swap root (index `0`) with the last element of the heap section.
+.. Reduce heap size by 1.
+.. `heapify(0)` to restore the max-heap property.
+. Continue until the heap size becomes 1.
 
-[NOTE]
-====
-This method builds the final sorted array from back to front, placing the largest elements into their correct positions first.
-====
+== ⏱️ Complexity
+* *Time*:
+** Build heap: `O(N)`
+** Each extract-max + heapify: `O(log N)` repeated `N` times → `O(N log N)` total
+* *Space*: `O(1)` (in-place)
+* *Stability*: **Not stable** (equal elements may change relative order)
 
-== Key Notes
+== ✅ When to Use
+* In-place `O(N log N)` required (no extra arrays like Merge Sort).
+* Predictable performance; no worst-case `O(N^2)` like Quick Sort.
 
-* The `heapify()` routine is the core mechanism that maintains the heap property (for a max-heap, a parent node is always greater than or equal to its children).
-* The algorithm consists of two main phases: building the initial heap (which is an `O(n)` operation) and then extracting the max element `n-1` times (an `O(n log n)` operation).
-* *Time Complexity:* `O(n log n)` for all cases (worst, average, and best).
-* *Space Complexity:* `O(1)` (it is an in-place sorting algorithm).
-* *Stability:* Heap Sort is not a stable sort, meaning the relative order of equal elements is not guaranteed to be preserved.
+== 🧠 Correctness Sketch
+* Building a max-heap ensures the largest element is at the root.
+* After swapping root with the end, the largest is fixed at its correct final position.
+* Recursively restoring the heap on the reduced range ensures the next largest rises to the root.
+* By induction, the whole array becomes sorted.
+
+== 🧪 Dry Run (Brief)
+Input: `[4, 10, 3, 5, 1]`
+
+. Build max-heap → `[10, 5, 3, 4, 1]`
+. Swap 10 with last → `[1, 5, 3, 4, 10]`, heapify (size=4) → `[5, 4, 3, 1, 10]`
+. Swap 5 with last of heap → `[1, 4, 3, 5, 10]`, heapify (size=3) → `[4, 1, 3, 5, 10]`
+. Swap 4 → `[3, 1, 4, 5, 10]`, heapify (size=2) → `[3, 1, 4, 5, 10]`
+. Swap 3 → `[1, 3, 4, 5, 10]` → Sorted ✅

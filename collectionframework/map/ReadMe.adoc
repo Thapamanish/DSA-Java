@@ -1,37 +1,38 @@
-= HashMap Utilities – Quick Reference
+= Map (HashMap, LinkedHashMap, TreeMap) – Quick Reference
 :toc: macro
 :toclevels: 2
 :source-highlighter: highlightjs
 
 [.lead]
-Cheatsheet of commonly used `HashMap` operations with notes on behavior and complexity.
+Cheatsheet of commonly used `Map` operations, first the **common API** shared by all implementations, then specifics for `HashMap`, `LinkedHashMap`, and `TreeMap`.
 
 toc::[]
 
-== Creation
-* `Map<K, V> map = new HashMap<>();`
-* `Map<K, V> map = new HashMap<>(initialCapacity);`
-* `Map<K, V> map = new HashMap<>(initialCapacity, loadFactor);`
-* `Map<K, V> copy = new HashMap<>(otherMap);`
+== Common Map Operations
+=== Creation
+* `Map<K,V> map = new HashMap<>();`
+* `Map<K,V> map = new LinkedHashMap<>();`
+* `Map<K,V> map = new TreeMap<>();`
+* `Map<K,V> copy = new HashMap<>(otherMap);`
 
-== Adding & Updating
+=== Adding & Updating
 * `put(key, value)` – insert or update mapping.
 * `putIfAbsent(key, value)` – only insert if key not present.
 * `putAll(map)` – copy all entries.
 
-== Accessing Values
+=== Accessing Values
 * `get(key)` – returns value or `null` if not found.
 * `getOrDefault(key, defaultValue)` – safe retrieval with fallback.
-* `containsKey(key)` – true if key present.
-* `containsValue(value)` – true if any entry has given value.
+* `containsKey(key)`
+* `containsValue(value)`
 
-== Removing
-* `remove(key)` – remove entry for key.
+=== Removing
+* `remove(key)`
 * `remove(key, value)` – remove only if key maps to value.
-* `clear()` – remove all mappings.
+* `clear()`
 
-== Iteration
-* Iterate over keys:
+=== Iteration
+* Over keys:  
 +
 [source,java]
 ----
@@ -39,15 +40,15 @@ for (K key : map.keySet()) {
     System.out.println(key);
 }
 ----
-* Iterate over values:
+* Over values:  
 +
 [source,java]
 ----
-for (V value : map.values()) {
-    System.out.println(value);
+for (V val : map.values()) {
+    System.out.println(val);
 }
 ----
-* Iterate over entries (keys + values):
+* Over entries (key + value):  
 +
 [source,java]
 ----
@@ -56,50 +57,127 @@ for (Map.Entry<K,V> e : map.entrySet()) {
 }
 ----
 
-== Bulk & Defaults
-* `isEmpty()` – check if empty.
-* `size()` – number of entries.
-* `merge(key, value, remappingFn)` – combine old + new value.
-* `compute(key, fn)` – recompute value for key.
-* `computeIfAbsent(key, fn)` – compute only if absent.
-* `computeIfPresent(key, fn)` – compute only if present.
-* `replace(key, value)` – replace value for key if present.
-* `replace(key, oldValue, newValue)` – replace only if current value matches.
-* `replaceAll(fn)` – apply function to all values.
+=== Bulk & Defaults
+* `isEmpty()`, `size()`
+* `merge(key, val, fn)` – combine old + new value.
+* `compute(key, fn)` – recompute value.
+* `computeIfAbsent(key, fn)`
+* `computeIfPresent(key, fn)`
+* `replace(key, value)`
+* `replace(key, oldVal, newVal)`
+* `replaceAll(fn)` – apply fn to all values.
 
-== Equality & Hashing
-* `equals(otherMap)` – true if same key-value pairs.
+=== Equality & Hashing
+* `equals(otherMap)` – true if same entries.
 * `hashCode()` – consistent with equals.
 
-== Complexity Snapshot
-[cols="30,35,35", options="header"]
+== Implementations
+=== HashMap
+* Backed by hash table.
+* ✅ O(1) average for `put/get/remove`.
+* ❌ Worst case O(n) if many hash collisions.
+* Allows one `null` key + many `null` values.
+* No ordering guarantees.
+
+=== LinkedHashMap
+* Extends HashMap, maintains **insertion order** (or access order if constructed that way).
+* Slightly slower than HashMap due to ordering maintenance.
+* Good when predictable iteration order is required (e.g., LRU cache with access-order mode).
+
+=== TreeMap
+* Backed by Red-Black Tree (implements `NavigableMap`).
+* ✅ Keys sorted by natural order or custom `Comparator`.
+* All operations O(log n).
+* ❌ Does not allow `null` keys (but values can be `null`).
+
+==== NavigableMap Operations
+TreeMap implements the `NavigableMap` interface, which extends `SortedMap` and adds powerful navigation methods:
+
+* `firstKey()` – lowest key
+* `lastKey()` – highest key
+* `ceilingKey(k)` – least key ≥ k
+* `floorKey(k)` – greatest key ≤ k
+* `higherKey(k)` – least key > k
+* `lowerKey(k)` – greatest key < k
+* `headMap(toKey, inclusive)` – keys < or ≤ toKey
+* `tailMap(fromKey, inclusive)` – keys ≥ or > fromKey
+* `subMap(fromKey, fromInclusive, toKey, toInclusive)` – range view
+* `descendingMap()` – reverse order view
+
+Example:
+
+[source,java]
+----
+TreeMap<Integer,String> tm = new TreeMap<>();
+tm.put(10,"ten"); tm.put(20,"twenty");
+tm.put(30,"thirty"); tm.put(40,"forty");
+
+System.out.println(tm.firstKey());     // 10
+System.out.println(tm.lastKey());      // 40
+System.out.println(tm.ceilingKey(25)); // 30
+System.out.println(tm.floorKey(25));   // 20
+System.out.println(tm.higherKey(20));  // 30
+System.out.println(tm.lowerKey(20));   // 10
+
+System.out.println(tm.headMap(30));          // {10=ten, 20=twenty}
+System.out.println(tm.headMap(30,true));     // {10=ten, 20=twenty, 30=thirty}
+System.out.println(tm.tailMap(20));          // {20=twenty, 30=thirty, 40=forty}
+System.out.println(tm.subMap(15,true,35,false)); // {20=twenty, 30=thirty}
+
+System.out.println(tm.descendingMap()); // reverse order
+----
+
+===== Complexity Snapshot for NavigableMap Ops
+[cols="40,30", options="header"]
 |===
-| Operation | Average Case | Worst Case
-| put/get/remove | O(1) | O(n) (rare, many collisions)
-| containsKey | O(1) | O(n)
-| containsValue | O(n) | O(n)
-| iteration (all entries) | O(n) | O(n)
+| Operation | Time Complexity
+| firstKey / lastKey | O(log n)
+| ceilingKey / floorKey | O(log n)
+| higherKey / lowerKey | O(log n)
+| headMap / tailMap / subMap | O(log n) (view creation)
+| descendingMap | O(1) view, iteration O(n)
+|===
+
+=== Legacy: Hashtable
+* Older synchronized map, replaced by `ConcurrentHashMap` for thread-safety.
+* Disallows `null` keys and `null` values.
+* Rarely used today.
+
+== Complexity Snapshot
+[cols="30,35,35,35", options="header"]
+|===
+| Operation | HashMap | LinkedHashMap | TreeMap
+| put/get/remove | O(1) average | O(1) average | O(log n)
+| containsKey | O(1) | O(1) | O(log n)
+| containsValue | O(n) | O(n) | O(n)
+| iteration | O(n) (unordered) | O(n) (insertion order) | O(n) (sorted order)
 |===
 
 == Gotchas
-* **Nulls**: `HashMap` allows one `null` key and multiple `null` values.
-* **Order**: `HashMap` does not guarantee ordering.  
-  - Use `LinkedHashMap` for insertion order.  
-  - Use `TreeMap` for sorted order (O(log n) ops).
-* **HashCode/Equals**: Custom key objects must override `hashCode()` and `equals()` properly.
-* Not thread-safe – use `ConcurrentHashMap` in multithreaded contexts.
+* **Nulls**:
+  - HashMap: one null key, many null values.
+  - LinkedHashMap: same as HashMap.
+  - TreeMap: no null keys.
+* **Ordering**:
+  - HashMap: none.
+  - LinkedHashMap: insertion (or access order).
+  - TreeMap: sorted.
+* **Custom Keys**:
+  - Must implement `equals` and `hashCode` correctly for HashMap/LinkedHashMap.
+  - Must implement `Comparable` or supply `Comparator` for TreeMap.
+* Not thread-safe: use `ConcurrentHashMap` if multi-threaded.
 
 == Common Patterns
-* **Frequency counter**:
+* **Frequency Counter**:
 +
 [source,java]
 ----
-Map<Integer, Integer> freq = new HashMap<>();
+Map<Integer,Integer> freq = new HashMap<>();
 for (int num : arr) {
     freq.put(num, freq.getOrDefault(num, 0) + 1);
 }
 ----
-* **Two Sum (LeetCode-style)**:
+* **Two Sum (LeetCode style)**:
 +
 [source,java]
 ----
@@ -111,4 +189,14 @@ for (int i=0; i<arr.length; i++) {
     }
     map.put(arr[i], i);
 }
+----
+* **Ordered cache (LRU)** with LinkedHashMap:
++
+[source,java]
+----
+Map<K,V> lru = new LinkedHashMap<>(16, 0.75f, true) {
+    protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
+        return size() > 100;
+    }
+};
 ----
