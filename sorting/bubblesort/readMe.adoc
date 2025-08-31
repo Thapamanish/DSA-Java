@@ -1,21 +1,53 @@
-= Bubble Sort
-The simplest sorting algorithm.
+= Bubble Sort — Story, Intuition, and Notes
 
-== Idea
-* Repeatedly compare adjacent elements, and swap if they’re in the wrong order.
-* After the 1st pass, the largest element “bubbles” to the end.
-* Repeat until the array is sorted.
+== 🪢 Story / Analogy
+Imagine bubbles rising in water. The *largest bubble* rises fastest to the top.  
+In Bubble Sort, in each pass, the *largest remaining element* rises (or "bubbles up") to its correct position at the end.
 
-== Pseudocode
-[source,pseudocode]
-----
-for i = 0 to n-1:
-    for j = 0 to n-i-2:
-        if arr[j] > arr[j+1]:
-            swap(arr[j], arr[j+1])
-----
+== 🔍 Algorithm (Ascending)
+Repeat for `i = 0` to `n-2`:
+. Compare adjacent pairs `(arr[j], arr[j+1])`.
+. If `arr[j] > arr[j+1]`, swap them.
+. After each full pass, the largest element is at index `n - i - 1`.
 
-== Complexity
-* *Worst Case Time:* `O(n^2^)`
-* *Best Case Time (Optimized):* `O(n)`
-* *Space:* `O(1)` (in-place)
+Optimization:  
+If no swaps occur during a pass, the array is already sorted → break early.
+
+== ⏱️ Complexity
+* *Time*: 
+** Worst & Average: `O(N^2)`
+** Best: `O(N)` (when input already sorted, thanks to the swapped flag)
+* *Space*: `O(1)` (in-place)
+* *Stability*: *Stable* (equal elements do not change relative order)
+
+== ✅ When to Use (and When Not)
+* Great for teaching and learning sorting concepts.
+* Not used in practice for large inputs (slow).
+* Works well if the array is *almost sorted* (early exit makes it fast).
+
+== 🧠 Correctness Sketch
+* Each pass ensures the next-largest element is placed in its correct position at the end.
+* By induction, after `i` passes, the last `i` elements are sorted and in final position.
+
+== 🧪 Dry Run
+Array: `[5, 1, 4, 2, 8]`
+
+* Pass 1:
+** Compare 5,1 → swap → `[1, 5, 4, 2, 8]`
+** Compare 5,4 → swap → `[1, 4, 5, 2, 8]`
+** Compare 5,2 → swap → `[1, 4, 2, 5, 8]`
+** Compare 5,8 → no swap → `[1, 4, 2, 5, 8]`
+Result: largest element 8 at end.
+
+* Pass 2:
+** Compare 1,4 → no swap
+** Compare 4,2 → swap → `[1, 2, 4, 5, 8]`
+** Compare 4,5 → no swap
+Result: 5 in place.
+
+* Pass 3:
+** Compare 1,2 → no swap
+** Compare 2,4 → no swap
+Result: already sorted, loop ends.
+
+Final: `[1, 2, 4, 5, 8]`

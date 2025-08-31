@@ -1,0 +1,135 @@
+= Set Utilities – Quick Reference
+:toc: macro
+:toclevels: 2
+:source-highlighter: highlightjs
+
+[.lead]
+Cheatsheet of commonly used `Set` operations, with notes on behavior and different implementations (`HashSet`, `LinkedHashSet`, `TreeSet`).
+
+toc::[]
+
+== Common Set Operations
+=== Creation
+* `Set<Integer> set = new HashSet<>();`
+* `Set<Integer> set = new LinkedHashSet<>();` // insertion order
+* `Set<Integer> set = new TreeSet<>();`       // sorted order
+
+=== Adding & Updating
+* `add(e)` – add element if not present (returns false if already exists).
+* `addAll(coll)` – union with another collection.
+
+=== Accessing & Searching
+* `contains(e)` – true if element present.
+* `isEmpty()`
+* `size()`
+
+=== Removing
+* `remove(e)` – remove element.
+* `removeAll(coll)` – remove all given elements.
+* `retainAll(coll)` – intersection (keep only elements in given coll).
+* `clear()` – remove everything.
+
+=== Iteration
+* For-each loop:
++
+[source,java]
+----
+for (Integer x : set) {
+    System.out.println(x);
+}
+----
+* Iterator:
++
+[source,java]
+----
+Iterator<Integer> it = set.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next());
+}
+----
+
+=== Bulk Operations
+* `containsAll(coll)` – check if set contains all given elements.
+* `addAll(coll)` – union.
+* `retainAll(coll)` – intersection.
+* `removeAll(coll)` – difference.
+
+=== Equality & Hashing
+* `equals(otherSet)` – true if same elements (order doesn’t matter).
+* `hashCode()` – consistent with equals.
+
+=== Stream API
++
+[source,java]
+----
+set.stream().filter(x -> x % 2 == 0).forEach(System.out::println);
+----
+
+== Implementations
+=== HashSet
+* Backed by hash table.
+* ✅ O(1) average for add, remove, contains.
+* ❌ No ordering guarantees.
+* Allows one `null`.
+
+=== LinkedHashSet
+* Maintains insertion order.
+* Slightly slower than HashSet (due to linked list overhead).
+* Also allows one `null`.
+
+=== TreeSet
+* Backed by Red-Black Tree (NavigableSet).
+* ✅ Sorted order (natural or custom Comparator).
+* ✅ Supports range queries: `headSet`, `tailSet`, `subSet`.
+* ❌ Operations are O(log n).
+* Does not allow `null`.
+
+== Complexity Snapshot
+[cols="30,35,35,35", options="header"]
+|===
+| Operation | HashSet | LinkedHashSet | TreeSet
+| add/remove/contains | O(1) average | O(1) average | O(log n)
+| iteration | O(n) (unordered) | O(n) (insertion order) | O(n) (sorted)
+|===
+
+== Gotchas
+* Duplicate elements are silently ignored (`add` returns false).
+* Iteration order depends on implementation:
+  - `HashSet` → unpredictable.
+  - `LinkedHashSet` → insertion order.
+  - `TreeSet` → sorted order.
+* Custom objects as keys must override `equals` and `hashCode` for HashSet / LinkedHashSet, or implement `Comparable` / provide `Comparator` for TreeSet.
+
+== Common Patterns
+* **Removing duplicates from list**:
++
+[source,java]
+----
+List<Integer> nums = Arrays.asList(1,2,2,3,3,4);
+Set<Integer> unique = new HashSet<>(nums);
+System.out.println(unique); // [1,2,3,4]
+----
+* **Intersection**:
++
+[source,java]
+----
+Set<Integer> a = new HashSet<>(Arrays.asList(1,2,3));
+Set<Integer> b = new HashSet<>(Arrays.asList(2,3,4));
+a.retainAll(b); // a = [2,3]
+----
+* **Union**:
++
+[source,java]
+----
+Set<Integer> a = new HashSet<>(Arrays.asList(1,2));
+Set<Integer> b = new HashSet<>(Arrays.asList(2,3));
+a.addAll(b); // a = [1,2,3]
+----
+* **Difference**:
++
+[source,java]
+----
+Set<Integer> a = new HashSet<>(Arrays.asList(1,2,3));
+Set<Integer> b = new HashSet<>(Arrays.asList(2,3));
+a.removeAll(b); // a = [1]
+----

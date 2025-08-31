@@ -1,5 +1,3 @@
-
-
 package maths;
 
 import java.util.*;
