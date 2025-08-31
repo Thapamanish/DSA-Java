@@ -1,110 +1,48 @@
-= Quick Sort (Divide & Conquer)
+= Quick Sort — Story, Intuition, and Notes
 
-== Idea
+== 🪢 Story / Analogy
+Imagine a teacher lining up students by height using a "divide & conquer" approach:
 
-Pivot:: Choose an element from the array, called the pivot.
-Partition:: Reorder the array so that all elements with values less than the pivot come before it, while all elements with values greater than the pivot come after it. After this partitioning, the pivot is in its final sorted position.
-Recurse:: Recursively apply the above steps to the sub-array of elements with smaller values and the sub-array of elements with greater values.
+1. The teacher picks one student as the *pivot*.
+2. Students shorter or equal to the pivot move to the left, taller students move to the right.
+3. Now the pivot is in its *final correct position*.
+4. Deputies repeat the process on the left group and the right group until every group has only one student.
 
-[NOTE]
-====
-The key insight is the partition step, which places one element correctly and reduces the problem size.
-====
+This is Quick Sort in action.
 
----
-## Choosing a Pivot
+== 🔍 Algorithm (Lomuto Partition, Ascending)
+. Choose the last element as pivot.
+. Partition the array so that:
+   * Elements ≤ pivot are on the left.
+   * Elements > pivot are on the right.
+. Place pivot at the correct position.
+. Recursively apply Quick Sort to the left and right parts.
 
-The choice of pivot affects the algorithm's performance significantly. Common strategies include:
+== ⏱️ Complexity
+* *Best / Average*: O(N log N)  
+* *Worst*: O(N^2) (if pivot is always smallest/largest, e.g. already sorted array with last-element pivot).  
+* *Space*: O(log N) recursion stack.  
+* *Stability*: Not stable (equal elements may change relative order).
 
-* Picking the first element.
-* Picking the last element (as used in the code).
-* Picking a random element.
-* Picking the median of three elements (first, middle, last).
+== ✅ Tips
+* Randomizing pivot or using "median-of-three" reduces worst-case chances.  
+* Generally faster than Merge Sort in practice (better cache performance, no extra O(N) memory).  
 
-[TIP]
-====
-Using a random pivot or the "median-of-three" method helps to avoid the worst-case scenario on already sorted or reverse-sorted data.
-====
+== 🧠 Correctness
+* Pivot ends up in its correct position after partition.  
+* Recursively, both left and right subarrays become sorted.  
+* By induction, the whole array is sorted.  
 
----
-## Example
+== 🧪 Dry Run
+Array: [10, 7, 8, 9, 1, 5]
 
-.Initial Array and Pivot (last element):
-....
-[10, 80, 30, 90, 40, 50, 70]  (Pivot = 70)
-....
-
-.After one partition step: The pivot `70` is placed in its correct sorted position. Elements smaller than `70` are to its left, and larger elements are to its right.
-....
-[10, 30, 40, 50, 70, 90, 80]
-....
-
-.Now, the algorithm recursively sorts the left subarray `[10, 30, 40, 50]` and the right subarray `[90, 80]`.
-
----
-## Complexity
-
-* **Time (Worst Case):** `O(n^2^)`
-* **Time (Best & Average Case):** `O(n log n)`
-* **Space:** `O(log n)` (due to the recursion call stack).
-
-[CAUTION]
-====
-The worst-case `O(n^2^)` complexity occurs when the pivot chosen is always the smallest or largest element, which can happen with a naive pivot strategy on an already sorted array.
-====
-
----
-## Key Observations
-
-* Generally faster in practice than Merge Sort due to lower constant factors and better cache performance.
-* It is an in-place sorting algorithm (unlike Merge Sort, which requires `O(n)` extra space).
-* Its performance is sensitive to the pivot selection strategy.
-
-
-= Quick Sort: The Teacher's Line-Up Analogy 👨‍🏫
-
-The best analogy for Quick Sort is a gym teacher trying to line up students by height using a "divide and conquer" method.
-
-== Step 1: Pick a "Pivot"
-
-The teacher picks one student from the line, let's say a student named Alex, and tells them to stand in the middle. Alex is the *pivot*.
-
-
-== Step 2: Partition the Line
-
-The teacher gives a simple command to everyone else: "If you are shorter than Alex, move to the left side of the line. If you are taller than Alex, move to the right side."
-
-After a bit of shuffling, the line is now in three parts:
-
-* A group of shorter (but still unordered) students on the left.
-* Alex, the pivot, in the middle.
-* A group of taller (but still unordered) students on the right.
-
-Crucially, Alex is now in their *final, correct position* in line.
-
-== Step 3: Recurse (Delegate the Task)
-
-The teacher now has two smaller, independent problems: sorting the "short group" and sorting the "tall group."
-
-The teacher appoints two senior students as deputies:
-
-* Deputy #1 takes the "short group" and repeats the exact same process: they pick a pivot from their group and have the other students line up to the left or right of that new pivot.
-* Deputy #2 does the same with the "tall group."
-
-This process of picking a pivot and partitioning the line continues for each smaller subgroup until every group consists of just one person. At that point, the entire line is sorted.
-
-== How it Maps to the Algorithm
-
-Let's see this with the array `[10, 80, 30, 90, 40, 50, 70]`.
-
-. *Pick a Pivot*: Let's pick the last element, `70`, as the pivot.
-. *Partition*: Rearrange the array so that all numbers smaller than `70` are on its left and all numbers larger are on its right.
-+
-....
-[10, 30, 40, 50, *70*, 90, 80]
-....
-+
-The pivot `70` is now in its correct final position.
-. *Recurse*: Now, the algorithm runs Quick Sort on the left subarray `[10, 30, 40, 50]` and the right subarray `[90, 80]`, repeating the process until everything is sorted.
-
-The "quick" part of the name comes from the fact that the partitioning step is very fast and efficiently places one element in its final sorted position with each pass.
+* Pivot = 5 (last element).  
+* Partition: [1, 5, 8, 9, 10, 7], pivot placed at index 1.  
+* Left side: [1] → already sorted.  
+* Right side: [8, 9, 10, 7].  
+  - Pivot = 7 → after partition [7, 9, 10, 8].  
+  - Left = [] (empty).  
+  - Right = [9, 10, 8].  
+    * Pivot = 8 → [8, 10, 9].  
+    * Recursively sort [10, 9] → [9, 10].  
+Final result: [1, 5, 7, 8, 9, 10].
