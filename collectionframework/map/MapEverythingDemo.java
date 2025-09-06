@@ -187,7 +187,7 @@ public class MapEverythingDemo {
 
         // by value (create list of entries, sort, then collect)
         List<Map.Entry<String,Integer>> entries = new ArrayList<>(unsorted.entrySet());
-        entries.sort(Comparator.comparingInt(Map.Entry::getValue).reversed());
+        entries.sort(Comparator.comparingInt(Map.Entry<String, Integer>::getValue).reversed());
         Map<String,Integer> byValueDesc = entries.stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey, Map.Entry::getValue,

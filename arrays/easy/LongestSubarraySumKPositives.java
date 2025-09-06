@@ -1,7 +1,5 @@
 package arrays.easy;
 
-import java.util.*;
-
 public class LongestSubarraySumKPositives{
 
     private static int longestSubarray(int[] arr, int k){
